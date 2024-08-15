@@ -23,6 +23,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   MapBloc() : super(const MapStateInitial()) {
     on<MapEventSearchAddress>(_onMapEventSearchAddress);
     on<MapEventGetDetailAddress>(_onMapEventGetDetailAddress);
+    on<MapEventGetEntryPointDetailAddress>(
+        _onMapEventGetEntryPointDetailAddress);
+
     on<MapEventGetDirection>(_onMapEventGetDirection);
     on<MapEventGetAddressFromCoordinate>(_onMapEventGetAddressFromCoordinate);
     on<MapEventOnUserLongTapOnMap>(_onMapEventOnUserLongTapOnMap);
@@ -118,6 +121,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       emit(MapStateGetDirectionSuccess(r, locs, state));
     });
     EasyLoading.dismiss();
+  }
+
+  _onMapEventGetEntryPointDetailAddress(
+      MapEventGetEntryPointDetailAddress event, Emitter<MapState> emit) async {
+    emit(MapStateLoading(state));
+    EasyLoading.show();
+    var response =
+        await GetPlaceDetailUseCase(VietmapApiRepositories()).call(event.refId);
+    EasyLoading.dismiss();
+    response.fold((l) => emit(MapStateGetPlaceDetailError('Error', state)),
+        (r) {
+      emit(MapStateGetPlaceDetailSuccess(r, state));
+    });
   }
 
   _onMapEventGetDetailAddress(

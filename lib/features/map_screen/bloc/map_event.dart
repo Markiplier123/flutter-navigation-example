@@ -17,6 +17,12 @@ class MapEventGetDetailAddress extends MapEvent {
   MapEventGetDetailAddress(this.model);
 }
 
+class MapEventGetEntryPointDetailAddress extends MapEvent {
+  final String refId;
+
+  MapEventGetEntryPointDetailAddress(this.refId);
+}
+
 class MapEventGetDirection extends MapEvent {
   final LatLng from;
   final LatLng to;

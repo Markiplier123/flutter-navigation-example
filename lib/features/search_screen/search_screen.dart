@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vietmap_map/components/debouncer_search.dart';
+import 'package:vietmap_map/features/search_screen/components/autocomplete_response_item.dart';
+import 'package:vietmap_map/features/search_screen/components/item_with_entry_points.dart';
 
 import '../map_screen/bloc/map_bloc.dart';
 import '../map_screen/bloc/map_event.dart';
@@ -103,38 +105,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: ListView.builder(
                         itemCount: state.response.length,
                         itemBuilder: (_, index) {
-                          return InkWell(
-                            onTap: () {
-                              context.read<MapBloc>().add(
-                                  MapEventGetDetailAddress(
-                                      state.response[index]));
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              Navigator.pop(context);
-                            },
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 10),
-                                const Icon(Icons.location_pin,
-                                    color: Colors.black54),
-                                const SizedBox(width: 5),
-                                Expanded(
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    title:
-                                        Text(state.response[index].name ?? ''),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(state.response[index].address ??
-                                            ''),
-                                        const Divider()
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          if (state.response[index].entryPoint?.isNotEmpty ??
+                              false) {
+                            return ItemWithEntryPoints(
+                              model: state.response[index],
+                            );
+                          }
+                          return AutocompleteResponseItem(
+                            model: state.response[index],
                           );
                         }),
                   );
