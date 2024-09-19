@@ -277,12 +277,14 @@ class _MapScreenState extends State<MapScreen> {
                     },
                     child: Hero(
                       tag: 'searchBar',
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const FloatingSearchBar(),
-                          CategoryBar(controller: _controller),
-                        ],
+                      child: FittedBox(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const FloatingSearchBar(),
+                            CategoryBar(controller: _controller),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -339,13 +341,7 @@ class _MapScreenState extends State<MapScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        onPressed: () {},
-                        child:
-                            Icon(Icons.zoom_out_sharp, color: Colors.grey[800]),
-                      ),
-                      const SizedBox(height: 10),
-                      FloatingActionButton(
+                        heroTag: "myLocation",
                         backgroundColor: Colors.white,
                         onPressed: () {
                           if (myLocationTrackingMode !=
@@ -378,6 +374,7 @@ class _MapScreenState extends State<MapScreen> {
                       ),
                       const SizedBox(height: 10),
                       FloatingActionButton(
+                        heroTag: "navigation",
                         onPressed: () {
                           Navigator.pushNamed(context, Routes.routingScreen);
                         },

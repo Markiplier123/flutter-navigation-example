@@ -101,6 +101,15 @@ class _SearchScreenState extends State<SearchScreen> {
                     current is MapStateGetHistorySearchSuccess;
               }, builder: (_, state) {
                 if (state is MapStateSearchAddressSuccess) {
+                  if (state.response.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Text('Không tìm thấy kết quả',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 17))),
+                    );
+                  }
                   return Expanded(
                     child: ListView.builder(
                         itemCount: state.response.length,

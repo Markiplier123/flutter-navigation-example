@@ -19,6 +19,7 @@ class VietmapAutocompleteModelAdapter
     };
     return VietmapAutocompleteModel(
       refId: fields[0] as String?,
+      entryPoint: (fields[9] as List?)?.cast<VietmapEntryPointModel?>(),
       address: fields[3] as String?,
       name: fields[4] as String?,
       display: fields[5] as String?,
@@ -30,9 +31,11 @@ class VietmapAutocompleteModelAdapter
   @override
   void write(BinaryWriter writer, VietmapAutocompleteModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.refId)
+      ..writeByte(9)
+      ..write(obj.entryPoint)
       ..writeByte(1)
       ..write(obj.lat)
       ..writeByte(2)

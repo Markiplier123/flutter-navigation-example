@@ -41,7 +41,6 @@ class HistorySearchRepositories implements HistorySearchRepository {
         }
       }
       _personBox?.add(recentSearch);
-      
       _personBox?.close();
       return const Right(true);
     } catch (e) {

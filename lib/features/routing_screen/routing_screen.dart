@@ -75,7 +75,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
       if (ModalRoute.of(context)!.settings.arguments != null) {
         var args = ModalRoute.of(context)!.settings.arguments as VietmapModel;
         routingBloc.add(RoutingEventUpdateRouteParams(
-            destinationDescription: args.name,
+            destinationDescription: args.getAddress() ?? 'Vị trí đã chọn',
             destinationPoint: LatLng(args.lat ?? 0, args.lng ?? 0)));
       }
 
@@ -96,17 +96,19 @@ class _RoutingScreenState extends State<RoutingScreen> {
           _panelController.show();
         }
       },
-      child: BlocListener<MapBloc, MapState>(  
+      child: BlocListener<MapBloc, MapState>(
         listener: (context, state) {
           if (state is MapStateGetPlaceDetailSuccess) {
             if (isFromOrigin) {
               routingBloc.add(RoutingEventUpdateRouteParams(
-                  originDescription: state.response.name,
+                  originDescription:
+                      state.response.getFullAddress() ?? 'Vị trí của bạn',
                   originPoint: LatLng(
                       state.response.lat ?? 0, state.response.lng ?? 0)));
             } else {
               routingBloc.add(RoutingEventUpdateRouteParams(
-                  destinationDescription: state.response.name,
+                  destinationDescription:
+                      state.response.getFullAddress() ?? 'Vị trí đã chọn',
                   destinationPoint: LatLng(
                       state.response.lat ?? 0, state.response.lng ?? 0)));
             }
@@ -276,7 +278,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                             },
                             panelBuilder: () => RoutingBottomPanel(
                                   onViewListStep: () {
-                                    if (_panelController.panelPosition == 0.0) {
+                                    if (_panelController.panelPosition <= 0.5) {
                                       _panelController
                                           .animatePanelToPosition(1.0);
                                     } else {

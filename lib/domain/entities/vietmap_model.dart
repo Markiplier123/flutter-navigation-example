@@ -16,4 +16,15 @@ class VietmapModel {
   @HiveField(5)
   String? display;
   VietmapModel({this.lat, this.lng, this.address, this.name, this.display});
+
+  String? getAddress() {
+    // get any address if not empty or null
+    if (address != null && address!.isNotEmpty) {
+      return address!;
+    }
+    if (display != null && display!.isNotEmpty) {
+      return display!;
+    }
+    return name;
+  }
 }

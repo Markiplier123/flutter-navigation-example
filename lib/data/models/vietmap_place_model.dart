@@ -64,4 +64,14 @@ class VietmapPlaceModel extends VietmapModel {
         .where((element) => element != null && element.isNotEmpty)
         .join(', ');
   }
+
+  String? getFullAddress() {
+    if (address != null && address!.isNotEmpty) {
+      return address;
+    }
+    if (display != null && display!.isNotEmpty) {
+      return display;
+    }
+    return name;
+  }
 }

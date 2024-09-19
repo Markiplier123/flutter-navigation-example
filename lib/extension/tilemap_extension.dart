@@ -11,7 +11,7 @@ extension TileMapExtension on MapTiles {
       case MapTiles.google:
         return "https://maps.vietmap.vn/api/maps/google/styles.json?apikey=$apiKey";
       case MapTiles.googleSatellite:
-        return "https://run.mocky.io/v3/5c58f825-7619-4d07-8202-ebe3d3b3b2b6";
+        return "https://maps.vietmap.vn/api/maps/google-satellite/styles.json?apikey=$apiKey";
     }
   }
 }
