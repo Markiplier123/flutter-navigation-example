@@ -237,23 +237,28 @@ class _MapScreenState extends State<MapScreen> {
                     ? const SizedBox.shrink()
                     : UserLocationLayer(
                         mapController: _controller!,
-                        locationIcon: const Icon(
-                          Icons.circle,
-                          color: Colors.blue,
-                          size: 50,
-                        ),
-                        bearingIcon: Container(
-                          width: 30,
-                          height: 30,
-                          alignment: Alignment.center,
+                        locationIcon: Container(
+                          padding: const EdgeInsets.all(2),
                           decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.white),
+                              shape: BoxShape.circle, color: vietmapColor),
                           child: const Icon(
-                            Icons.arrow_upward,
-                            color: Colors.red,
-                            size: 15,
+                            Icons.circle,
+                            color: Colors.white,
+                            size: 20,
                           ),
                         ),
+                        bearingIcon: Container(
+                            width: 50,
+                            height: 50,
+                            alignment: Alignment.topCenter,
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.transparent),
+                            child: Image.asset(
+                              'assets/images/heading.png',
+                              width: 15,
+                              height: 15,
+                            )),
                         ignorePointer: true,
                       ),
                 _controller == null
