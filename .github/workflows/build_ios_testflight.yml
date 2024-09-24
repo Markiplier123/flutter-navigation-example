@@ -30,14 +30,13 @@ jobs:
     - name: Create .env file
       run: |
         echo "VIETMAP_API_KEY=${{ secrets.VIETMAP_API_KEY }}" > .env
-        
     # Step 4: Install dependencies
     - name: Install dependencies
       run: flutter pub get
     
     # Step 5: Export mobileprovision file
     - name: Export mobileprovision file
-      run: echo "$MOBILEPROVISION" | base64 --decode > /ios/fastlane/vietmap.mobileprovision
+      run: echo "$MOBILEPROVISION" | base64 --decode > ios/fastlane/vietmap.mobileprovision
       env:
         MOBILEPROVISION: ${{ secrets.MOBILEPROVISION }}
 
