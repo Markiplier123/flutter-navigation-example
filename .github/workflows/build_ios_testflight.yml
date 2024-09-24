@@ -47,6 +47,16 @@ jobs:
           \"key\": \"$APP_STORE_CONNECT_API_KEY\"
         }" > fastlane/AuthKey.p8
 
+    # Step 7: Create fastlane Fastfile
+    - name: Create Fastfile for fastlane
+      run: |
+        echo "$FASTFILE" > fastlane/Fastfile
+
+    # Step 8: Create fastlane Appfile
+    - name: Create Appfile for fastlane
+      run: |
+        echo "$APPFILE" > fastlane/Appfile
+        
     # Step 8: Upload to TestFlight using fastlane
     - name: Upload to TestFlight
       run: |
