@@ -1,8 +1,9 @@
+name: Build and Deploy to TestFlight
 
 on:
-  push:
+  release:
     branches:
-      - dev  # Trigger on push to the main branch
+      - dev
 
 jobs:
   build:
@@ -45,6 +46,7 @@ jobs:
           \"issuer_id\": \"$APP_STORE_CONNECT_ISSUER_ID\",
           \"key\": \"$APP_STORE_CONNECT_API_KEY\"
         }" > fastlane/AuthKey.p8
+        
     # Step 8: Upload to TestFlight using fastlane
     - name: Upload to TestFlight
       run: |

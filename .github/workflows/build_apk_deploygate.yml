@@ -1,9 +1,9 @@
 name: Build and Deploy to DeployGate
 
 on:
-  push:
+  release:
     branches:
-      - dev  # Specify the branch you want this action to trigger on
+      - dev
 
 jobs:
   build:
