@@ -18,7 +18,7 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'stable'
+        flutter-version: '3.22.2'
 
     # Step 3: Update Info.plist file
     - name: Update Info.plist
@@ -46,7 +46,7 @@ jobs:
           \"issuer_id\": \"$APP_STORE_CONNECT_ISSUER_ID\",
           \"key\": \"$APP_STORE_CONNECT_API_KEY\"
         }" > fastlane/AuthKey.p8
-        
+
     # Step 8: Upload to TestFlight using fastlane
     - name: Upload to TestFlight
       run: |
