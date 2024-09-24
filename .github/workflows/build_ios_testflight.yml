@@ -43,7 +43,7 @@ jobs:
     # Step 6: Export configuration file
     - name: Export configuration file
       run: |
-        echo "$EXPORT_CONFIGURATION" > /ios/fastlane/export_options.plist
+        echo "$EXPORT_CONFIGURATION" > ios/fastlane/export_options.plist
 
     # Step 7: Build iOS app
     - name: Build iOS
