@@ -29,16 +29,27 @@ jobs:
     # Step 4: Install dependencies
     - name: Install dependencies
       run: flutter pub get
+    
+    # Step 5: Export mobileprovision file
+    - name: Export mobileprovision file
+      run: echo "$MOBILEPROVISION" | base64 --decode > /ios/fastlane/vietmap.mobileprovision
+      env:
+        MOBILEPROVISION: ${{ secrets.MOBILEPROVISION }}
 
-    # Step 5: Build iOS app
+    # Step 6: Export configuration file
+    - name: Export configuration file
+      run: |
+        echo "$EXPORT_CONFIGURATION" > /ios/fastlane/export_options.plist
+
+    # Step 7: Build iOS app
     - name: Build iOS
-      run: flutter build ipa --release
+      run: flutter build ipa --release --export-options-plist=ios/fastlane/export_options.plist
 
-    # Step 6: Install fastlane
+    # Step 8: Install fastlane
     - name: Install fastlane
       run: sudo gem install fastlane
 
-    # Step 7: Create fastlane App Store Connect API key file
+    # Step 9: Create fastlane App Store Connect API key file
     - name: Create API key for App Store Connect
       run: |
         echo "{
@@ -47,17 +58,17 @@ jobs:
           \"key\": \"$APP_STORE_CONNECT_API_KEY\"
         }" > fastlane/AuthKey.p8
 
-    # Step 7: Create fastlane Fastfile
+    # Step 10: Create fastlane Fastfile
     - name: Create Fastfile for fastlane
       run: |
         echo "$FASTFILE" > fastlane/Fastfile
 
-    # Step 8: Create fastlane Appfile
+    # Step 11: Create fastlane Appfile
     - name: Create Appfile for fastlane
       run: |
         echo "$APPFILE" > fastlane/Appfile
         
-    # Step 8: Upload to TestFlight using fastlane
+    # Step 12: Upload to TestFlight using fastlane
     - name: Upload to TestFlight
       run: |
         fastlane pilot upload \
