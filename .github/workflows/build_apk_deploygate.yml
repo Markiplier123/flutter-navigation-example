@@ -3,7 +3,7 @@ name: Build and Deploy to DeployGate
 on:
   push:
     branches:
-      - main  # Specify the branch you want this action to trigger on
+      - dev  # Specify the branch you want this action to trigger on
 
 jobs:
   build:
