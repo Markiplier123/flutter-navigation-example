@@ -26,6 +26,11 @@ jobs:
         /usr/libexec/PlistBuddy -c "Set :VietMapAccessToken ${{ secrets.VIETMAP_API_KEY }}" ios/Runner/Info.plist
         /usr/libexec/PlistBuddy -c "Set :VietMapURL ${{ secrets.VIETMAP_STYLE_URL }}" ios/Runner/Info.plist
     
+    # Step 4: Create .env file
+    - name: Create .env file
+      run: |
+        echo "VIETMAP_API_KEY=${{ secrets.VIETMAP_API_KEY }}" > .env
+        
     # Step 4: Install dependencies
     - name: Install dependencies
       run: flutter pub get
