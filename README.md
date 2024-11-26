@@ -10,7 +10,41 @@ This project use [vietmap_flutter_navigation](https://pub.dev/packages/vietmap_f
 ## Environment configure
 - Create `.env` file, which contains all content as [example.env](/example.env) file we created.
 - Replace your api key to the `YOUR_API_KEY_HERE` tag in [Info.plist](/ios/Runner/Info.plist) file.
+- If you need to test the Android Auto, please replace your api key to `YOUR_API_KEY_HERE` tag in `android/app/androidauto/src/main/java/vn/vietmap/androidauto/VietMapCarAppScreen.kt` file.
 
+## Test the Android Auto
+**This app only work with DHU emulator, cause Android Auto feature can't use with physical device until deploy on the Play Store**
+#### 1. Please following this official documentation from Google about Desktop Head Unit (DHU) [here](https://developer.android.com/training/cars/testing/dhu?authuser=1)
+SDK location:
+
+MacOS:
+`/Users/<username>/Library/Android/sdk`
+
+Windows:
+`C:\Users\<username>\AppData\Local\Android\sdk`
+
+Linux:
+`/home/<username>/Android/Sdk`
+
+CD to the DHU folder
+```shell
+cd SDK_LOCATION/extras/google/auto
+```
+
+Run the DHU
+```shell
+desktop-head-unit.exe   # Windows
+./desktop-head-unit     # macOS or Linux
+```
+
+#### 2. Start the DHU
+#### 3. Connect the real device to the DHU
+#### 4. Run the app on the real device
+#### 5. Open the Android Auto app on the DHU
+
+
+## Integration Android Auto 
+- Follow this document to add Android Auto to your project: [VietMap Android Auto SDK](https://github.com/vietmap-company/vietmap-android-auto)
 
 <br></br>
 
