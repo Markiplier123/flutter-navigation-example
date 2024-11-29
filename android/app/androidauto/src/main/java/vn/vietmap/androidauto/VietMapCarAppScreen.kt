@@ -50,7 +50,7 @@ class VietMapCarAppScreen(
                     CarIcon.Builder(
                         IconCompat.createWithResource(
                             carContext,
-                            R.drawable.vietmap_logo_icon
+                            R.drawable.add
                         )
                     ).build()
                 ).setOnClickListener {
@@ -67,7 +67,7 @@ class VietMapCarAppScreen(
         val panIconBuilder = CarIcon.Builder(
             IconCompat.createWithResource(
                 carContext,
-                R.drawable.vietmap_compass_icon
+                R.drawable.minus
             )
         )
         builder.setMapActionStrip(
@@ -83,7 +83,7 @@ class VietMapCarAppScreen(
                             CarIcon.Builder(
                                 IconCompat.createWithResource(
                                     carContext,
-                                    R.drawable.vietmap_info_bg_selector
+                                    R.drawable.add
                                 )
                             )
                                 .build()
@@ -98,7 +98,7 @@ class VietMapCarAppScreen(
                             CarIcon.Builder(
                                 IconCompat.createWithResource(
                                     carContext,
-                                    R.drawable.vietmap_compass_icon
+                                    R.drawable.minus
                                 )
                             )
                                 .build()
