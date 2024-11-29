@@ -29,7 +29,7 @@ dependencies:
   vietmap_flutter_gl: ^3.0.0 
   hive_flutter: ^1.1.0 
   vietmap_gl_platform_interface: ^0.2.0
-  vietmap_flutter_navigation: ^3.1.1
+  vietmap_flutter_navigation: ^3.2.0
   talker: ^3.1.4 
   flutter_dotenv: ^5.1.0
 
