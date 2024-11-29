@@ -1,0 +1,82 @@
+name: Build and Deploy to TestFlight
+
+on:
+  release:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    # Step 1: Checkout the repo
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Flutter
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.22.2'
+
+    # Step 3: Update Info.plist file
+    - name: Update Info.plist
+      run: |
+        /usr/libexec/PlistBuddy -c "Set :VietMapAccessToken ${{ secrets.VIETMAP_API_KEY }}" ios/Runner/Info.plist
+        /usr/libexec/PlistBuddy -c "Set :VietMapURL ${{ secrets.VIETMAP_STYLE_URL }}" ios/Runner/Info.plist
+    
+    # Step 4: Create .env file
+    - name: Create .env file
+      run: |
+        echo "VIETMAP_API_KEY=${{ secrets.VIETMAP_API_KEY }}" > .env
+    # Step 4: Install dependencies
+    - name: Install dependencies
+      run: flutter pub get
+    
+    # Step 5: Export mobileprovision file
+    - name: Export mobileprovision file
+      run: echo "$MOBILEPROVISION" | base64 --decode > ios/fastlane/vietmap.mobileprovision
+      env:
+        MOBILEPROVISION: ${{ secrets.MOBILEPROVISION }}
+
+    # Step 6: Export configuration file
+    - name: Export configuration file
+      run: |
+        echo "$EXPORT_CONFIGURATION" > ios/fastlane/export_options.plist
+
+    # Step 7: Build iOS app
+    - name: Build iOS
+      run: flutter build ipa --release --export-options-plist=ios/fastlane/export_options.plist
+
+    # Step 8: Install fastlane
+    - name: Install fastlane
+      run: sudo gem install fastlane
+
+    # Step 9: Create fastlane App Store Connect API key file
+    - name: Create API key for App Store Connect
+      run: |
+        echo "{
+          \"key_id\": \"$APP_STORE_CONNECT_KEY_ID\",
+          \"issuer_id\": \"$APP_STORE_CONNECT_ISSUER_ID\",
+          \"key\": \"$APP_STORE_CONNECT_API_KEY\"
+        }" > fastlane/AuthKey.p8
+
+    # Step 10: Create fastlane Fastfile
+    - name: Create Fastfile for fastlane
+      run: |
+        echo "$FASTFILE" > fastlane/Fastfile
+
+    # Step 11: Create fastlane Appfile
+    - name: Create Appfile for fastlane
+      run: |
+        echo "$APPFILE" > fastlane/Appfile
+        
+    # Step 12: Upload to TestFlight using fastlane
+    - name: Upload to TestFlight
+      run: |
+        fastlane pilot upload \
+          --ipa ./build/ios/ipa/Runner.ipa \
+          --api_key_path fastlane/AuthKey.p8 \
+          --skip_submission true \
+          --skip_waiting_for_build_processing true

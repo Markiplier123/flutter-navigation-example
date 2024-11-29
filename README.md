@@ -1,6 +1,9 @@
 # Vietmap Flutter GL - Flutter map SDK
 [<img src="https://bizweb.dktcdn.net/100/415/690/themes/804206/assets/logo.png?1689561872933" height="40"/> </p>](https://bit.ly/vietmap-api)
 
+## Download the demo app:
+- Android: [Deploygate](https://dply.me/rbht07)
+- iOS: [Testflight](https://testflight.apple.com/join/72lT6D0w)
  
 Contact [vietmap.vn](https://bit.ly/vietmap-api) to register a valid key. 
  

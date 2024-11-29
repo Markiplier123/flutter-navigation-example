@@ -1,0 +1,42 @@
+name: Build and Deploy to DeployGate
+
+on:
+  release:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repo
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up Flutter
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.22.2'
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: flutter pub get
+
+    # Step 4: Create .env file
+    - name: Create .env file
+      run: |
+        echo "VIETMAP_API_KEY=${{ secrets.VIETMAP_API_KEY }}" > .env
+
+    # Step 5: Build App bundle file for Android
+    - name: Build APK
+      run: flutter build appbundle
+
+    # Step 6: Upload AAB file to DeployGate
+    - name: Upload to DeployGate
+      run: |
+        curl -F "file=@build/app/outputs/bundle/release/app-release.aab" \
+        -F "token=${{ secrets.DEPLOYGATE_TOKEN }}" \
+        -F "message=New build from GitHub Actions" \
+        https://deploygate.com/api/users/thanhdt/apps
