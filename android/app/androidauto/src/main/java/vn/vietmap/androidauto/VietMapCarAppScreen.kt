@@ -11,7 +11,6 @@ import androidx.car.app.model.CarIcon
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.model.NavigationTemplate
 import androidx.core.graphics.drawable.IconCompat
-import vn.vietmap.vietmapandroidautosdk.map.VietMapAndroidAutoSurface
 import vn.vietmap.vietmapsdk.maps.OnMapReadyCallback
 import vn.vietmap.vietmapsdk.maps.Style
 import vn.vietmap.vietmapsdk.maps.VietMapGL
@@ -26,6 +25,7 @@ class VietMapCarAppScreen(
     private val mSurfaceCallback: SurfaceCallback = object : SurfaceCallback {
         // Handle surface callback event here
     }
+
     init {
         mSurfaceRenderer.addOnSurfaceCallbackListener(mSurfaceCallback)
         mSurfaceRenderer.init(
