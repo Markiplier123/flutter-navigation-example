@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:vietmap_map/constants/route.dart';
 class FloatingSearchBar extends StatelessWidget {
   const FloatingSearchBar({super.key});
 
@@ -17,6 +17,7 @@ class FloatingSearchBar extends StatelessWidget {
       child: Row(
         children: [
           const SizedBox(width: 10),
+          
           const SizedBox(width: 10),
           const Text('Nhập từ khoá để tìm kiếm')
         ],
