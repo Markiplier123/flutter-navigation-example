@@ -13,20 +13,20 @@ class CategoryBar extends StatefulWidget {
 
 class _CategoryBarState extends State<CategoryBar> {
   var categoryPoint = {
-    1000: 'Ăn & Uống',
-    2000: 'Chỗ ở',
-    3000: 'Mua sắm',
-    4000: 'Giải trí & Thư giãn',
-    5000: 'Thể thao',
-    6000: 'Sản xuất - dịch vụ',
-    7000: 'Y tế',
-    8000: 'Cộng đồng',
-    9000: 'Cơ quan - chính quyền',
-    10000: 'Xe',
-    11000: 'Phương tiện đi lại',
-    12000: 'Tên giao lộ',
-    13000: 'Giáo dục',
-    14000: 'Tôn giáo - nơi thờ phụng',
+    // 1000: 'Ăn & Uống',
+    // 2000: 'Chỗ ở',
+    // 3000: 'Mua sắm',
+    // 4000: 'Giải trí & Thư giãn',
+    // 5000: 'Thể thao',
+    // 6000: 'Sản xuất - dịch vụ',
+    // 7000: 'Y tế',
+    // 8000: 'Cộng đồng',
+    // 9000: 'Cơ quan - chính quyền',
+    // 10000: 'Xe',
+    // 11000: 'Phương tiện đi lại',
+    // 12000: 'Tên giao lộ',
+    // 13000: 'Giáo dục',
+    // 14000: 'Tôn giáo - nơi thờ phụng',
   };
   @override
   Widget build(BuildContext context) {

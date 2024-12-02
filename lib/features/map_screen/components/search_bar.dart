@@ -17,11 +17,6 @@ class FloatingSearchBar extends StatelessWidget {
       child: Row(
         children: [
           const SizedBox(width: 10),
-          Image.asset(
-            'assets/images/vietmap.jpg',
-            width: 25,
-            height: 25,
-          ),
           const SizedBox(width: 10),
           const Text('Nhập từ khoá để tìm kiếm')
         ],
