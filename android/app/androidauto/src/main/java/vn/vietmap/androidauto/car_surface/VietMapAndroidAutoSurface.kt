@@ -1,4 +1,4 @@
-package vn.vietmap.androidauto
+package vn.vietmap.androidauto.car_surface
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -239,9 +239,7 @@ class VietMapAndroidAutoSurface(private val mCarContext: CarContext, lifecycle: 
     override fun onCreate(owner: LifecycleOwner) {
         Vietmap.getInstance(mCarContext)
         Handler(Looper.getMainLooper()).post {
-
             Vietmap.getInstance(mCarContext)
-            mCarContext.getCarService(AppManager::class.java).setSurfaceCallback(mSurfaceCallback)
             mapView = createMapViewInstance().apply {
                 // Add the mapView to a window using the windowManager. This is needed for the mapView to start rendering.
                 // The mapView is not actually shown on any screen, but acts as though it is visible.
@@ -263,6 +261,8 @@ class VietMapAndroidAutoSurface(private val mCarContext: CarContext, lifecycle: 
                 }
             }
         }
+
+        mCarContext.getCarService(AppManager::class.java).setSurfaceCallback(mSurfaceCallback)
     }
 
     private fun getWindowManagerLayoutParams() = WindowManager.LayoutParams(
@@ -354,9 +354,9 @@ class VietMapAndroidAutoSurface(private val mCarContext: CarContext, lifecycle: 
     private fun doRenderFrame() {
         try {
             renderLayout()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
-            exitProcess(0)
+//            exitProcess(1)
         }
     }
 

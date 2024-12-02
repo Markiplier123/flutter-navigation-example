@@ -17,7 +17,7 @@ import androidx.car.app.navigation.model.Step
 import androidx.car.app.navigation.model.TravelEstimate
 import androidx.core.graphics.drawable.IconCompat
 import com.mapbox.api.directions.v5.models.BannerInstructions
-import vn.vietmap.androidauto.IVietMapCarMapController
+import vn.vietmap.androidauto.vm_interface.IVietMapCarMapController
 import vn.vietmap.services.android.navigation.v5.routeprogress.RouteProgress
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -26,23 +26,27 @@ class VietMapCarSurfaceHelper(
     private var behaviorHandler: IVietMapCarMapController,
     private var carContext: Context,
 ) {
-    private var actionStripBuilder = ActionStrip.Builder()
 
-    val navigationTemplateBuilder = NavigationTemplate.Builder()
+    private var actionStripBuilder = ActionStrip.Builder()
+    var navigationTemplateBuilder = NavigationTemplate.Builder()
     private var travelEstimate: TravelEstimate.Builder? = null
     private var maneuver: Maneuver.Builder? = null
     private var step: Step.Builder? = null
     private var routingInfo: RoutingInfo.Builder? = null
 
     init {
-        navigationTemplateBuilder.setBackgroundColor(
-            CarColor.DEFAULT
-        )
+        initNavigationTemplate()
+    }
+
+    fun refreshNavigationTemplate() {
+        navigationTemplateBuilder = NavigationTemplate.Builder()
         initNavigationTemplate()
     }
 
     fun initNavigationTemplate() {
-
+//        navigationTemplateBuilder = NavigationTemplate.Builder()
+        navigationTemplateBuilder.setBackgroundColor(CarColor.DEFAULT)
+        actionStripBuilder = ActionStrip.Builder()
         actionStripBuilder.addAction(
             Action.Builder()
                 .setIcon(
@@ -54,7 +58,8 @@ class VietMapCarSurfaceHelper(
                     ).build()
                 )
                 .setOnClickListener {
-//                    behaviorHandler.overviewRoute()
+                    // Push to search screen
+                    behaviorHandler.pushToSearchScreen()
                 }
                 .build()
 
@@ -113,7 +118,7 @@ class VietMapCarSurfaceHelper(
         descriptionText: String,
     ) {
         travelEstimate = TravelEstimate.Builder(
-            VietMapHelper.getDisplayDistance(distanceEstimate),
+            VietMapNavigationHelper.getDisplayDistance(distanceEstimate),
             DateTimeWithZone.create(
                 ZonedDateTime.now().plusSeconds(durationEstimate)
             )
@@ -135,7 +140,7 @@ class VietMapCarSurfaceHelper(
                 CarIcon.Builder(
                     IconCompat.createWithResource(
                         carContext,
-                        VietMapHelper.getDrawableResId(maneuverType)
+                        VietMapNavigationHelper.getDrawableResId(maneuverType)
                     )
                 ).build()
             )
@@ -161,6 +166,7 @@ class VietMapCarSurfaceHelper(
                 }
                 .build()
         )
+
         actionStripBuilder.addAction(
             Action.Builder()
                 .setIcon(
@@ -175,7 +181,6 @@ class VietMapCarSurfaceHelper(
                     behaviorHandler.overviewRoute()
                 }
                 .build()
-
         )
 
         actionStripBuilder.addAction(
@@ -192,9 +197,7 @@ class VietMapCarSurfaceHelper(
                     behaviorHandler.recenter()
                 }
                 .build()
-
         )
-
 
         navigationTemplateBuilder.setActionStrip(actionStripBuilder.build())
 
@@ -256,6 +259,7 @@ class VietMapCarSurfaceHelper(
                 }
                 .build()
         )
+
         actionStripBuilder.addAction(
             Action.Builder()
                 .setIcon(
@@ -291,6 +295,21 @@ class VietMapCarSurfaceHelper(
         )
 
 
+        actionStripBuilder.addAction(
+            Action.Builder()
+                .setIcon(
+                    CarIcon.Builder(
+                        IconCompat.createWithResource(
+                            carContext,
+                            R.drawable.close
+                        )
+                    ).build()
+                )
+                .setOnClickListener {
+                    behaviorHandler.stopNavigation()
+                }
+                .build()
+        )
         navigationTemplateBuilder.setActionStrip(actionStripBuilder.build())
 
         // Set the map action strip with the pan and zoom buttons.
@@ -350,15 +369,12 @@ class VietMapCarSurfaceHelper(
     }
 
     fun updateRoutingInfo(distanceToNextTurn: Double) {
-
         routingInfo = step?.let {
             RoutingInfo.Builder()
                 .setLoading(false)
-
-
                 .setCurrentStep(
                     it.build(),
-                    VietMapHelper.getDisplayDistance(distanceToNextTurn)
+                    VietMapNavigationHelper.getDisplayDistance(distanceToNextTurn)
                 )
         }
 

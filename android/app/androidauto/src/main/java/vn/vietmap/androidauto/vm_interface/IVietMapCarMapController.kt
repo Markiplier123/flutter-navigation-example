@@ -1,4 +1,4 @@
-package vn.vietmap.androidauto
+package vn.vietmap.androidauto.vm_interface
 
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 
@@ -10,4 +10,5 @@ interface IVietMapCarMapController {
     fun startNavigation()
     fun stopNavigation()
     fun setRoute(route: DirectionsRoute)
+    fun pushToSearchScreen()
 }

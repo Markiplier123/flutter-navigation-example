@@ -58,6 +58,7 @@ flutter:
     - assets/images/vm_demo.png
     - assets/tiles/
     - .env
+    
 # flutter pub run build_runner build 
 
 

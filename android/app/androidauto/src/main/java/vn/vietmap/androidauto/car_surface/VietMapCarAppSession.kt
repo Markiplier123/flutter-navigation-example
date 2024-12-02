@@ -1,8 +1,9 @@
-package vn.vietmap.androidauto
+package vn.vietmap.androidauto.car_surface
 
 import android.content.Intent
 import androidx.car.app.Screen
 import androidx.car.app.Session
+import vn.vietmap.androidauto.screens.VietMapNavigationScreen
 import vn.vietmap.vietmapsdk.Vietmap
 
 class VietMapCarAppSession: Session() {
