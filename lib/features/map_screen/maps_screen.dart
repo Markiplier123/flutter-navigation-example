@@ -7,6 +7,7 @@ import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 import 'package:talker/talker.dart';
 import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
 import 'package:vietmap_map/extension/tilemap_extension.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/map_screen/components/category_marker.dart';
 import '../../constants/colors.dart';
 import '../../constants/route.dart';
@@ -27,6 +28,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  Position? _position;
   VietmapController? _controller;
   List<Marker> _markers = [];
   List<Marker> _nearbyMarker = [];
@@ -61,9 +63,17 @@ class _MapScreenState extends State<MapScreen> {
         _panelController.hide();
       });
       var res = await Geolocator.checkPermission();
-      if (res != LocationPermission.always ||
-          res != LocationPermission.whileInUse) {
-        await Geolocator.requestPermission();
+      if (![LocationPermission.always, LocationPermission.whileInUse]
+          .contains(res)) {
+        final LocationPermission locationPermission =
+            await Geolocator.requestPermission();
+
+        if ([LocationPermission.always, LocationPermission.whileInUse]
+            .contains(locationPermission)) {
+          await _handleGetAddressByGas();
+        }
+      } else {
+        await _handleGetAddressByGas();
       }
       // Geolocator.getPositionStream().listen((event) {
       //   setState(() {
@@ -72,6 +82,31 @@ class _MapScreenState extends State<MapScreen> {
       //   });
       // });
     });
+  }
+
+  Future<void> _handleGetAddressByGas() async {
+    _position = await Geolocator.getCurrentPosition();
+
+    AppBloc.mapBloc.add(
+      MapEventGetAddressFromCategory(
+        categoryCode: 10009,
+        latLng: LatLng(
+          _position?.latitude ?? 0,
+          _position?.longitude ?? 0,
+        ),
+      ),
+    );
+
+    if (_position != null) {
+      _controller?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(_position!.latitude, _position!.longitude),
+            zoom: 13,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -181,8 +216,10 @@ class _MapScreenState extends State<MapScreen> {
                   // minMaxZoomPreference: const MinMaxZoomPreference(0, 18),
                   styleString: tileMap,
                   // styleString: VMTileMap.satellite,
-                  initialCameraPosition: const CameraPosition(
-                      target: LatLng(10.762201, 106.654213), zoom: 10),
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(_position?.latitude ?? 10.762201,
+                          _position?.longitude ?? 106.654213),
+                      zoom: 13),
                   onMapCreated: (controller) {
                     setState(() {
                       _controller = controller;
@@ -212,12 +249,10 @@ class _MapScreenState extends State<MapScreen> {
                         String? nameWithPrefix =
                             ('${prefix ?? ''} ${name ?? ''}').trim();
                         if (type == 'Point') {
-                          context.read<MapBloc>().add(
-                              MapEventUserClickOnMapPoint(
-                                  placeShortName: shortName ?? nameWithPrefix,
-                                  placeName: nameWithPrefix,
-                                  coordinate:
-                                      LatLng(latLng.last, latLng.first)));
+                          AppBloc.mapBloc.add(MapEventUserClickOnMapPoint(
+                              placeShortName: shortName ?? nameWithPrefix,
+                              placeName: nameWithPrefix,
+                              coordinate: LatLng(latLng.last, latLng.first)));
                         }
                         break;
                       }
@@ -286,7 +321,32 @@ class _MapScreenState extends State<MapScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const FloatingSearchBar(),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    padding: const EdgeInsets.only(left: 4),
+                                    margin: const EdgeInsets.only(left: 8),
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.arrow_back_ios,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const FloatingSearchBar(),
+                              ],
+                            ),
                             CategoryBar(controller: _controller),
                           ],
                         ),
@@ -349,33 +409,40 @@ class _MapScreenState extends State<MapScreen> {
                         heroTag: "myLocation",
                         backgroundColor: Colors.white,
                         onPressed: () {
-                          if (myLocationTrackingMode !=
-                              MyLocationTrackingMode.TrackingCompass) {
-                            _controller?.updateMyLocationTrackingMode(
-                                MyLocationTrackingMode.TrackingCompass);
-                            setState(() {
-                              myLocationTrackingMode =
-                                  MyLocationTrackingMode.TrackingCompass;
-                              myLocationRenderMode =
-                                  MyLocationRenderMode.COMPASS;
-                            });
-                          } else {
-                            _controller?.updateMyLocationTrackingMode(
-                                MyLocationTrackingMode.TrackingGPS);
-                            setState(() {
-                              myLocationTrackingMode =
-                                  MyLocationTrackingMode.TrackingGPS;
-                              myLocationRenderMode =
-                                  MyLocationRenderMode.NORMAL;
-                            });
+                          if (_position != null) {
+                            _controller?.animateCamera(
+                              CameraUpdate.newCameraPosition(
+                                CameraPosition(
+                                  target: LatLng(_position!.latitude,
+                                      _position!.longitude),
+                                  zoom: 13,
+                                ),
+                              ),
+                            );
                           }
+
+                          // if (myLocationTrackingMode !=
+                          //     MyLocationTrackingMode.TrackingCompass) {
+                          //   _controller?.updateMyLocationTrackingMode(
+                          //       MyLocationTrackingMode.TrackingCompass);
+                          //   setState(() {
+                          //     myLocationTrackingMode =
+                          //         MyLocationTrackingMode.TrackingCompass;
+                          //     myLocationRenderMode =
+                          //         MyLocationRenderMode.COMPASS;
+                          //   });
+                          // } else {
+                          //   _controller?.updateMyLocationTrackingMode(
+                          //       MyLocationTrackingMode.TrackingGPS);
+                          //   setState(() {
+                          //     myLocationTrackingMode =
+                          //         MyLocationTrackingMode.TrackingGPS;
+                          //     myLocationRenderMode =
+                          //         MyLocationRenderMode.NORMAL;
+                          //   });
+                          // }
                         },
-                        child: Icon(
-                            myLocationTrackingMode ==
-                                    MyLocationTrackingMode.TrackingCompass
-                                ? Icons.compass_calibration_sharp
-                                : Icons.gps_fixed,
-                            color: Colors.grey[800]),
+                        child: Icon(Icons.gps_fixed, color: Colors.grey[800]),
                       ),
                       const SizedBox(height: 10),
                       FloatingActionButton(

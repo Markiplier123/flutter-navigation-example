@@ -14,6 +14,7 @@ import 'package:vietmap_flutter_navigation/views/navigation_view.dart';
 import 'package:vietmap_map/constants/colors.dart';
 import 'package:vietmap_map/domain/entities/vietmap_model.dart';
 import 'package:vietmap_map/extension/latlng_extension.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/routing_screen/components/routing_header.dart';
 import '../../di/app_context.dart';
 import '../map_screen/bloc/map_bloc.dart';
@@ -63,7 +64,6 @@ class _RoutingScreenState extends State<RoutingScreen> {
     _vietmapPlugin.setDefaultOptions(_navigationOption);
   }
 
-  RoutingBloc get routingBloc => BlocProvider.of<RoutingBloc>(context);
   MapOptions? options;
   @override
   void initState() {
@@ -74,14 +74,14 @@ class _RoutingScreenState extends State<RoutingScreen> {
           .then((value) => _panelController.hide());
       if (ModalRoute.of(context)!.settings.arguments != null) {
         var args = ModalRoute.of(context)!.settings.arguments as VietmapModel;
-        routingBloc.add(RoutingEventUpdateRouteParams(
+        AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
             destinationDescription: args.getAddress() ?? 'Vị trí đã chọn',
             destinationPoint: LatLng(args.lat ?? 0, args.lng ?? 0)));
       }
 
       var position = await Geolocator.getCurrentPosition();
       if (!mounted) return;
-      routingBloc.add(RoutingEventUpdateRouteParams(
+      AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
           originDescription: 'Vị trí của bạn',
           originPoint: LatLng(position.latitude, position.longitude)));
     });
@@ -90,7 +90,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<RoutingBloc, RoutingState>(
-      bloc: routingBloc,
+      bloc: AppBloc.routingBloc,
       listener: (context, state) {
         if (state is RoutingStateNativeRouteBuilt && !_isRunning) {
           _panelController.show();
@@ -100,13 +100,13 @@ class _RoutingScreenState extends State<RoutingScreen> {
         listener: (context, state) {
           if (state is MapStateGetPlaceDetailSuccess) {
             if (isFromOrigin) {
-              routingBloc.add(RoutingEventUpdateRouteParams(
+              AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
                   originDescription:
                       state.response.getFullAddress() ?? 'Vị trí của bạn',
                   originPoint: LatLng(
                       state.response.lat ?? 0, state.response.lng ?? 0)));
             } else {
-              routingBloc.add(RoutingEventUpdateRouteParams(
+              AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
                   destinationDescription:
                       state.response.getFullAddress() ?? 'Vị trí đã chọn',
                   destinationPoint: LatLng(
@@ -140,7 +140,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                       ));
               return Future.value(false);
             }
-            routingBloc.add(RoutingEventClearDirection());
+            AppBloc.routingBloc.add(RoutingEventClearDirection());
             return Future.value(true);
           },
           child: Scaffold(
@@ -166,7 +166,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                     NavigationView(
                       mapOptions: _navigationOption,
                       onNewRouteSelected: (DirectionRoute p0) {
-                        routingBloc.add(
+                        AppBloc.routingBloc.add(
                             RoutingEventNativeRouteBuilt(directionRoute: p0));
                       },
                       onMapRendered: () async {
@@ -203,11 +203,11 @@ class _RoutingScreenState extends State<RoutingScreen> {
                       },
                       onMapCreated: (p0) async {
                         _navigationController = p0;
-                        routingBloc.add(RoutingEventUpdateRouteParams(
+                        AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
                             navigationController: _navigationController));
                       },
                       onRouteBuilt: (DirectionRoute p0) {
-                        routingBloc.add(
+                        AppBloc.routingBloc.add(
                             RoutingEventNativeRouteBuilt(directionRoute: p0));
                         setState(() {
                           EasyLoading.dismiss();
@@ -293,7 +293,7 @@ class _RoutingScreenState extends State<RoutingScreen> {
                                       _isRunning = true;
                                     });
                                   },
-                                  routingBloc: routingBloc,
+                                  routingBloc: AppBloc.routingBloc,
                                 ))
                   ],
                 ),

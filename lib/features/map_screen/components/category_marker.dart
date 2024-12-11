@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 
 import '../../../data/models/vietmap_reverse_model.dart';
 import '../bloc/bloc.dart';
@@ -9,9 +10,9 @@ class CategoryMarker extends StatelessWidget {
   final Color? color;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(  
+    return GestureDetector(
       onTap: () {
-        context.read<MapBloc>().add(MapEventShowPlaceDetail(model));
+        AppBloc.mapBloc.add(MapEventShowPlaceDetail(model));
       },
       child: SizedBox(
         height: 70,

@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vietmap_map/constants/colors.dart';
+import 'package:vietmap_map/constants/route.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
+import 'package:vietmap_map/features/home/fuel_brake_screen.dart';
+import 'package:vietmap_map/features/map_screen/bloc/bloc.dart';
+import 'package:vietmap_map/features/map_screen/maps_screen.dart';
 import 'package:vietmap_map/features/pick_address_screen/pick_address_screen.dart';
 import 'package:vietmap_map/features/routing_screen/routing_screen.dart';
 import 'package:vietmap_map/features/routing_screen/search_address.dart';
 import 'package:vietmap_map/features/search_screen/search_screen.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:vietmap_map/main.dart';
-import 'constants/route.dart';
-import 'features/map_screen/bloc/bloc.dart';
-import 'features/map_screen/maps_screen.dart';
-import 'features/routing_screen/bloc/bloc.dart';
 
-class NavigationScreen extends StatelessWidget {
+GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+class FuelBrakeApp extends StatelessWidget {
+  const FuelBrakeApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => MapBloc()),
-        BlocProvider(create: (context) => RoutingBloc()),
-      ],
+      providers: AppBloc.providers,
       child: MaterialApp(
-        title: 'VietMap Flutter GL',
+        navigatorKey: navigatorKey,
+        title: 'Fuel & Brake Status',
         routes: {
+          Routes.fuelBrakeScreen: (context) => const FuelBrakeScreen(),
           Routes.searchScreen: (context) => const SearchScreen(),
           Routes.mapScreen: (context) => const MapScreen(),
           Routes.routingScreen: (context) => const RoutingScreen(),
@@ -33,7 +33,7 @@ class NavigationScreen extends StatelessWidget {
           Routes.searchAddressForRoutingScreen: (context) =>
               const SearchAddress(),
         },
-        initialRoute: Routes.mapScreen,
+        initialRoute: Routes.fuelBrakeScreen,
         theme: ThemeData(
             useMaterial3: false,
             primarySwatch: MaterialColor(
@@ -54,8 +54,8 @@ class NavigationScreen extends StatelessWidget {
             primaryColor: vietmapColor,
             primaryColorLight: vietmapColor,
             fontFamily: GoogleFonts.montserrat().fontFamily),
-            debugShowCheckedModeBanner: false,
-            builder: EasyLoading.init(),
+        debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
       ),
     );
   }

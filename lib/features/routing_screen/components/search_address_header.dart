@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 
 import '../../../constants/route.dart';
 import '../../../core/debounce.dart';
@@ -131,20 +132,17 @@ class _SearchAddressHeaderState extends State<SearchAddressHeader> {
                   if (location != null) {
                     location = location as VietMapPickerData;
                     if (!mounted) return;
-                    context.read<RoutingBloc>().add(
-                        RoutingEventUpdateRouteParams(
-                            originPoint: widget.isSearchFromOrigin
-                                ? location.latLng
-                                : null,
-                            destinationPoint: !widget.isSearchFromOrigin
-                                ? location.latLng
-                                : null,
-                            originDescription: widget.isSearchFromOrigin
-                                ? location.displayText ?? 'Vị trí ghim'
-                                : null,
-                            destinationDescription: !widget.isSearchFromOrigin
-                                ? location.displayText ?? 'Vị trí ghim'
-                                : null));
+                    AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
+                        originPoint:
+                            widget.isSearchFromOrigin ? location.latLng : null,
+                        destinationPoint:
+                            !widget.isSearchFromOrigin ? location.latLng : null,
+                        originDescription: widget.isSearchFromOrigin
+                            ? location.displayText ?? 'Vị trí ghim'
+                            : null,
+                        destinationDescription: !widget.isSearchFromOrigin
+                            ? location.displayText ?? 'Vị trí ghim'
+                            : null));
                     Navigator.pop(context);
                   }
                 },

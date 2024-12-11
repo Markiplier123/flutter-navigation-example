@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/routing_screen/components/vehicle_button.dart';
 import 'package:vietmap_map/features/routing_screen/models/routing_header_model.dart';
 
@@ -39,9 +40,7 @@ class RoutingHeader extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                         onTap: () {
-                          context
-                              .read<RoutingBloc>()
-                              .add(RoutingEventClearDirection());
+                          AppBloc.routingBloc.add(RoutingEventClearDirection());
                           Navigator.pop(context);
                         },
                         child: const Icon(Icons.arrow_back_ios_new_rounded,
@@ -58,8 +57,7 @@ class RoutingHeader extends StatelessWidget {
                     Center(
                       child: InkWell(
                         onTap: () {
-                          context
-                              .read<RoutingBloc>()
+                          AppBloc.routingBloc
                               .add(RoutingEventReverseDirection());
                         },
                         child: const Icon(Icons.swap_vert_rounded,
@@ -87,8 +85,7 @@ class RoutingHeader extends StatelessWidget {
                           currentVehicleType:
                               state.routingParams?.vehicle ?? VehicleType.car,
                           onPressed: () {
-                            context
-                                .read<RoutingBloc>()
+                            AppBloc.routingBloc
                                 .add(RoutingEventUpdateRouteParams(vehicle: e));
                           })))),
             );
