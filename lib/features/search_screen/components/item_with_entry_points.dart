@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vietmap_map/data/models/vietmap_autocomplete_model.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/map_screen/bloc/bloc.dart';
 
 class ItemWithEntryPoints extends StatelessWidget {
@@ -15,7 +16,7 @@ class ItemWithEntryPoints extends StatelessWidget {
       childrenPadding: const EdgeInsets.only(left: 30),
       title: InkWell(
         onTap: () {
-          context.read<MapBloc>().add(MapEventGetDetailAddress(model));
+          AppBloc.mapBloc.add(MapEventGetDetailAddress(model));
           FocusScope.of(context).requestFocus(FocusNode());
           Navigator.pop(context);
         },
@@ -44,7 +45,7 @@ class ItemWithEntryPoints extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  context.read<MapBloc>().add(
+                  AppBloc.mapBloc.add(
                       MapEventGetEntryPointDetailAddress(entryPoint.refId!));
                   FocusScope.of(context).requestFocus(FocusNode());
                   Navigator.pop(context);

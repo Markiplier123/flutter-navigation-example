@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/map_screen/bloc/bloc.dart';
 
 import 'select_map_tiles_modal.dart';
@@ -12,7 +13,7 @@ class TileOptionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<MapBloc>().add(MapEventChangeMapTiles(mapType));
+        AppBloc.mapBloc.add(MapEventChangeMapTiles(mapType));
       },
       child: Container(
         margin: const EdgeInsets.only(right: 7),

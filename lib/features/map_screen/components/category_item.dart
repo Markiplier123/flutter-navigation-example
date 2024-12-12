@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatelessWidget {
-  const CategoryItem(
-      {super.key,
-      required this.name,
-      required this.catId,
-      required this.onPressed});
   final String name;
   final int catId;
   final VoidCallback onPressed;
+
+  const CategoryItem({
+    super.key,
+    required this.name,
+    required this.catId,
+    required this.onPressed,
+  });
+
   @override
   Widget build(BuildContext context) {
     return InkWell(

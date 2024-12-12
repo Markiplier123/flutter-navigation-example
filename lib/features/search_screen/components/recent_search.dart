@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/map_screen/bloc/map_bloc.dart';
 import 'package:vietmap_map/features/map_screen/bloc/map_state.dart';
 import '../../map_screen/bloc/map_event.dart';
@@ -52,7 +53,7 @@ class RecentSearchWidget extends StatelessWidget {
                           onTap: () {
                             focusNode.requestFocus();
                             controller.text = state.response[index].name ?? '';
-                            context.read<MapBloc>().add(MapEventSearchAddress(
+                            AppBloc.mapBloc.add(MapEventSearchAddress(
                                 address: state.response[index].name ?? ''));
                           },
                           child: const Icon(Icons.arrow_outward_rounded,

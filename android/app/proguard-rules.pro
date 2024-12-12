@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.mapbox.api.directions.v5.AutoValue_MapboxDirections$1
+-dontwarn com.ryanharter.auto.value.gson.GsonTypeAdapterFactory

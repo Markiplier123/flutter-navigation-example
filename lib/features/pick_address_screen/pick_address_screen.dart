@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talker/talker.dart';
 import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
 import 'package:vietmap_map/components/debouncer_search.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/map_screen/bloc/map_state.dart';
 
 import '../../di/app_context.dart';
@@ -73,9 +74,8 @@ class _PickAddressScreenState extends State<PickAddressScreen> {
               _debounce.run(() {
                 if (_controller?.cameraPosition != null) {
                   try {
-                    context.read<MapBloc>().add(
-                        MapEventGetAddressFromCoordinate(
-                            coordinate: _controller!.cameraPosition!.target));
+                    AppBloc.mapBloc.add(MapEventGetAddressFromCoordinate(
+                        coordinate: _controller!.cameraPosition!.target));
                   } catch (e) {
                     talker.handle(e.toString());
                   }

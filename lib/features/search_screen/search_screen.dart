@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vietmap_map/components/debouncer_search.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/search_screen/components/autocomplete_response_item.dart';
 import 'package:vietmap_map/features/search_screen/components/item_with_entry_points.dart';
 
@@ -27,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
       await Future.delayed(const Duration(milliseconds: 500));
       _focusNode.requestFocus();
     });
-    context.read<MapBloc>().add(MapEventGetHistorySearch());
+    AppBloc.mapBloc.add(MapEventGetHistorySearch());
   }
 
   @override

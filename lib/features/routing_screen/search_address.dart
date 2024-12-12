@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
 
 import '../map_screen/bloc/map_bloc.dart';
 import '../map_screen/bloc/map_event.dart';
@@ -53,7 +54,7 @@ class _SearchAddressState extends State<SearchAddress> {
                     itemBuilder: (_, index) {
                       return InkWell(
                         onTap: () {
-                          context.read<MapBloc>().add(
+                          AppBloc.mapBloc.add(
                               MapEventGetDetailAddress(state.response[index]));
                           FocusScope.of(context).requestFocus(FocusNode());
                           Navigator.pop(context);
