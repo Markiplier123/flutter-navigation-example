@@ -10,7 +10,7 @@ import 'package:vietmap_map/extension/tilemap_extension.dart';
 import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/map_screen/components/category_marker.dart';
 import '../../constants/colors.dart';
-import '../../constants/route.dart';
+import '../../core/navigators/app_route.dart';
 import '../../di/app_context.dart';
 import 'bloc/map_bloc.dart';
 import 'bloc/map_event.dart';
@@ -21,14 +21,15 @@ import 'components/search_bar.dart';
 import 'components/select_map_tiles_modal.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final Position position;
+  const MapScreen({super.key, required this.position});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Position? _position;
+  late Position _position;
   VietmapController? _controller;
   List<Marker> _markers = [];
   List<Marker> _nearbyMarker = [];
@@ -44,6 +45,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     talker.enable();
+    _position = widget.position;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       EasyLoading.instance
         ..displayDuration = const Duration(milliseconds: 500)
@@ -62,19 +64,7 @@ class _MapScreenState extends State<MapScreen> {
       Future.delayed(const Duration(milliseconds: 200)).then((value) {
         _panelController.hide();
       });
-      var res = await Geolocator.checkPermission();
-      if (![LocationPermission.always, LocationPermission.whileInUse]
-          .contains(res)) {
-        final LocationPermission locationPermission =
-            await Geolocator.requestPermission();
 
-        if ([LocationPermission.always, LocationPermission.whileInUse]
-            .contains(locationPermission)) {
-          await _handleGetAddressByGas();
-        }
-      } else {
-        await _handleGetAddressByGas();
-      }
       // Geolocator.getPositionStream().listen((event) {
       //   setState(() {
       //     position = event;
@@ -82,31 +72,6 @@ class _MapScreenState extends State<MapScreen> {
       //   });
       // });
     });
-  }
-
-  Future<void> _handleGetAddressByGas() async {
-    _position = await Geolocator.getCurrentPosition();
-
-    AppBloc.mapBloc.add(
-      MapEventGetAddressFromCategory(
-        categoryCode: 10009,
-        latLng: LatLng(
-          _position?.latitude ?? 0,
-          _position?.longitude ?? 0,
-        ),
-      ),
-    );
-
-    if (_position != null) {
-      _controller?.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(_position!.latitude, _position!.longitude),
-            zoom: 13,
-          ),
-        ),
-      );
-    }
   }
 
   @override
@@ -217,8 +182,7 @@ class _MapScreenState extends State<MapScreen> {
                   styleString: tileMap,
                   // styleString: VMTileMap.satellite,
                   initialCameraPosition: CameraPosition(
-                      target: LatLng(_position?.latitude ?? 10.762201,
-                          _position?.longitude ?? 106.654213),
+                      target: LatLng(_position.latitude, _position.longitude),
                       zoom: 13),
                   onMapCreated: (controller) {
                     setState(() {
@@ -409,17 +373,17 @@ class _MapScreenState extends State<MapScreen> {
                         heroTag: "myLocation",
                         backgroundColor: Colors.white,
                         onPressed: () {
-                          if (_position != null) {
-                            _controller?.animateCamera(
-                              CameraUpdate.newCameraPosition(
-                                CameraPosition(
-                                  target: LatLng(_position!.latitude,
-                                      _position!.longitude),
-                                  zoom: 13,
+                          _controller?.animateCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: LatLng(
+                                  _position.latitude,
+                                  _position.longitude,
                                 ),
+                                zoom: 13,
                               ),
-                            );
-                          }
+                            ),
+                          );
 
                           // if (myLocationTrackingMode !=
                           //     MyLocationTrackingMode.TrackingCompass) {

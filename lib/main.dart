@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:vietmap_map/features/home/fuel_brake_app.dart';
+import 'package:vietmap_map/features/home/app.dart';
 
 void main() {
   runZonedGuarded(() async {
@@ -17,6 +17,6 @@ void main() {
     } catch (e) {
       rethrow;
     }
-    return runApp(const FuelBrakeApp());
+    return runApp(const App());
   }, (error, stackTrace) {});
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vietmap_map/constants/route.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:vietmap_gl_platform_interface/vietmap_gl_platform_interface.dart';
+import 'package:vietmap_map/core/navigators/app_route.dart';
+import 'package:vietmap_map/features/bloc/bloc.dart';
+import 'package:vietmap_map/features/map_screen/bloc/map_event.dart';
 
 class FuelBrakeScreen extends StatefulWidget {
   const FuelBrakeScreen({super.key});
@@ -43,7 +47,7 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              showFuelStationDialog();
+              showFuelStationDialog(context);
             },
             child: const Text('Got it'),
           ),
@@ -52,7 +56,7 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
     );
   }
 
-  void showFuelStationDialog() {
+  void showFuelStationDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -61,9 +65,20 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
             'Would you like to go to the nearest fuel station to refuel?'),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.pushNamed(context, Routes.mapScreen);
+            onPressed: () async {
+              var res = await Geolocator.checkPermission();
+              if (![LocationPermission.always, LocationPermission.whileInUse]
+                  .contains(res)) {
+                final LocationPermission locationPermission =
+                    await Geolocator.requestPermission();
+
+                if ([LocationPermission.always, LocationPermission.whileInUse]
+                    .contains(locationPermission)) {
+                  await _navigatorMapScreen(context);
+                }
+              } else {
+                await _navigatorMapScreen(context);
+              }
             },
             child: const Text('OK'),
           ),
@@ -76,6 +91,25 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _navigatorMapScreen(BuildContext context) async {
+    final Position position = await Geolocator.getCurrentPosition();
+
+    AppBloc.mapBloc.add(
+      MapEventGetAddressFromCategory(
+        categoryCode: 10009,
+        latLng: LatLng(
+          position.latitude,
+          position.longitude,
+        ),
+      ),
+    );
+
+    Navigator.of(context).pop();
+    Navigator.pushNamed(context, Routes.mapScreen, arguments: {
+      "position": position,
+    });
   }
 
   void showHandBrakeDialog() {

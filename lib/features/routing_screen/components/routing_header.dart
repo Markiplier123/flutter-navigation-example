@@ -4,7 +4,7 @@ import 'package:vietmap_map/features/routing_screen/components/vehicle_button.da
 import 'package:vietmap_map/features/routing_screen/models/routing_header_model.dart';
 
 import '../../../constants/colors.dart';
-import '../../../constants/route.dart';
+import '../../../core/navigators/app_route.dart';
 import '../../../domain/entities/vietmap_routing_params.dart';
 import '../bloc/bloc.dart';
 

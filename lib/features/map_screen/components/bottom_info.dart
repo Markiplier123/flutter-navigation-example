@@ -5,7 +5,7 @@ import 'package:vietmap_map/components/map_action_button.dart';
 import 'package:vietmap_map/features/map_screen/bloc/map_bloc.dart';
 
 import '../../../constants/colors.dart';
-import '../../../constants/route.dart';
+import '../../../core/navigators/app_route.dart';
 import '../../routing_screen/models/routing_params_model.dart';
 import '../bloc/map_state.dart';
 
