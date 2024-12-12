@@ -18,7 +18,7 @@ class AppNavigator {
       case Routes.mapScreen:
         return MaterialPageRoute(builder: (context) {
           return MapScreen(
-            position: arguments?['position'],
+            isNavigator: arguments?['navigator'] ?? false,
           );
         });
       case Routes.fuelBrakeScreen:

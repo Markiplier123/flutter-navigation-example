@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:vietmap_gl_platform_interface/vietmap_gl_platform_interface.dart';
 import 'package:vietmap_map/core/navigators/app_route.dart';
-import 'package:vietmap_map/features/bloc/bloc.dart';
-import 'package:vietmap_map/features/map_screen/bloc/map_event.dart';
 
 class FuelBrakeScreen extends StatefulWidget {
   const FuelBrakeScreen({super.key});
@@ -13,9 +9,9 @@ class FuelBrakeScreen extends StatefulWidget {
 }
 
 class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
-  double fuelLevel = 50.0; // Fuel level (0-100)
-  bool isHandBrakeEngaged = false; // Handbrake status
-  int selectedTabIndex = 0; // 0: Home, 1: Map
+  double fuelLevel = 50.0;
+  bool isHandBrakeEngaged = false;
+  int selectedTabIndex = 0;
 
   void updateFuel(double value) {
     setState(() {
@@ -66,19 +62,9 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              var res = await Geolocator.checkPermission();
-              if (![LocationPermission.always, LocationPermission.whileInUse]
-                  .contains(res)) {
-                final LocationPermission locationPermission =
-                    await Geolocator.requestPermission();
-
-                if ([LocationPermission.always, LocationPermission.whileInUse]
-                    .contains(locationPermission)) {
-                  await _navigatorMapScreen(context);
-                }
-              } else {
-                await _navigatorMapScreen(context);
-              }
+              Navigator.of(context).pop();
+              Navigator.pushNamed(context, Routes.mapScreen,
+                  arguments: {"navigator": true});
             },
             child: const Text('OK'),
           ),
@@ -91,25 +77,6 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _navigatorMapScreen(BuildContext context) async {
-    final Position position = await Geolocator.getCurrentPosition();
-
-    AppBloc.mapBloc.add(
-      MapEventGetAddressFromCategory(
-        categoryCode: 10009,
-        latLng: LatLng(
-          position.latitude,
-          position.longitude,
-        ),
-      ),
-    );
-
-    Navigator.of(context).pop();
-    Navigator.pushNamed(context, Routes.mapScreen, arguments: {
-      "position": position,
-    });
   }
 
   void showHandBrakeDialog() {

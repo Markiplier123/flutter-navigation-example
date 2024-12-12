@@ -62,7 +62,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   _onMapEventGetAddressFromCategory(
       MapEventGetAddressFromCategory event, Emitter<MapState> emit) async {
     emit(MapStateLoading(state));
-    EasyLoading.show();
+    if (!EasyLoading.isShow) {
+      EasyLoading.show();
+    }
 
     var response =
         await GetLocationFromCategoryUseCase(VietmapApiRepositories()).call(
@@ -70,7 +72,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
                 lat: event.latLng?.latitude ?? 0,
                 long: event.latLng?.longitude ?? 0,
                 category: event.categoryCode));
-    EasyLoading.dismiss();
+    if (EasyLoading.isShow) {
+      EasyLoading.dismiss();
+    }
     response.fold((l) => emit(MapStateSearchAddressError('Error', state)),
         (r) => emit(MapStateGetCategoryAddressSuccess(r, state)));
   }

@@ -21,15 +21,15 @@ import 'components/search_bar.dart';
 import 'components/select_map_tiles_modal.dart';
 
 class MapScreen extends StatefulWidget {
-  final Position position;
-  const MapScreen({super.key, required this.position});
+  final bool isNavigator;
+  const MapScreen({super.key, required this.isNavigator});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  late Position _position;
+  Position? _position;
   VietmapController? _controller;
   List<Marker> _markers = [];
   List<Marker> _nearbyMarker = [];
@@ -45,7 +45,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     talker.enable();
-    _position = widget.position;
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       EasyLoading.instance
         ..displayDuration = const Duration(milliseconds: 500)
@@ -61,6 +61,24 @@ class _MapScreenState extends State<MapScreen> {
         ..maskColor = Colors.grey.withOpacity(0.2)
         ..userInteractions = true
         ..dismissOnTap = false;
+      EasyLoading.show();
+      var res = await Geolocator.checkPermission();
+      if (![LocationPermission.always, LocationPermission.whileInUse]
+          .contains(res)) {
+        final LocationPermission locationPermission =
+            await Geolocator.requestPermission();
+
+        if ([LocationPermission.always, LocationPermission.whileInUse]
+            .contains(locationPermission)) {
+          await animatedToMyLocation(context);
+        }
+      } else {
+        await animatedToMyLocation(context);
+      }
+      if (EasyLoading.isShow) {
+        EasyLoading.dismiss();
+      }
+
       Future.delayed(const Duration(milliseconds: 200)).then((value) {
         _panelController.hide();
       });
@@ -72,6 +90,33 @@ class _MapScreenState extends State<MapScreen> {
       //   });
       // });
     });
+  }
+
+  Future<void> animatedToMyLocation(BuildContext context) async {
+    _position = await Geolocator.getCurrentPosition();
+
+    final myLocation = LatLng(
+      _position!.latitude,
+      _position!.longitude,
+    );
+
+    if (widget.isNavigator) {
+      AppBloc.mapBloc.add(
+        MapEventGetAddressFromCategory(
+          categoryCode: 10009,
+          latLng: myLocation,
+        ),
+      );
+    }
+
+    _controller?.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: myLocation,
+          zoom: 13,
+        ),
+      ),
+    );
   }
 
   @override
@@ -182,7 +227,8 @@ class _MapScreenState extends State<MapScreen> {
                   styleString: tileMap,
                   // styleString: VMTileMap.satellite,
                   initialCameraPosition: CameraPosition(
-                      target: LatLng(_position.latitude, _position.longitude),
+                      target: LatLng(_position?.latitude ?? 10.762201,
+                          _position?.longitude ?? 106.654213),
                       zoom: 13),
                   onMapCreated: (controller) {
                     setState(() {
@@ -372,14 +418,22 @@ class _MapScreenState extends State<MapScreen> {
                       FloatingActionButton(
                         heroTag: "myLocation",
                         backgroundColor: Colors.white,
-                        onPressed: () {
+                        onPressed: () async {
+                          final LatLng myLocation;
+
+                          if (_position != null) {
+                            myLocation = LatLng(
+                                _position!.latitude, _position!.longitude);
+                          } else {
+                            myLocation =
+                                await _controller?.requestMyLocationLatLng() ??
+                                    const LatLng(0, 0);
+                          }
+
                           _controller?.animateCamera(
                             CameraUpdate.newCameraPosition(
                               CameraPosition(
-                                target: LatLng(
-                                  _position.latitude,
-                                  _position.longitude,
-                                ),
+                                target: myLocation,
                                 zoom: 13,
                               ),
                             ),
