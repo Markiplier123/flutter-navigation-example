@@ -9,7 +9,8 @@ import 'components/search_address_header.dart';
 import 'models/routing_header_model.dart';
 
 class SearchAddress extends StatefulWidget {
-  const SearchAddress({super.key});
+  final RoutingHeaderModel paramsModel;
+  const SearchAddress({super.key, required this.paramsModel});
 
   @override
   State<SearchAddress> createState() => _SearchAddressState();
@@ -21,15 +22,21 @@ class _SearchAddressState extends State<SearchAddress> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var args =
-          ModalRoute.of(context)?.settings.arguments as RoutingHeaderModel?;
-      if (args != null) {
-        setState(() {
-          isSearchFromOrigin = args.isFromOrigin;
-          addressText = args.addressText;
+      // var args =
+      //     ModalRoute.of(context)?.settings.arguments as RoutingHeaderModel?;
+      // if (args != null) {
+      //   setState(() {
+      //     isSearchFromOrigin = args.isFromOrigin;
+      //     addressText = args.addressText;
+      //   });
+      // }
+
+      var args = widget.paramsModel;
+      setState(() {
+        isSearchFromOrigin = args.isFromOrigin;
+        addressText = args.addressText;
+      });
         });
-      }
-    });
     super.initState();
   }
 

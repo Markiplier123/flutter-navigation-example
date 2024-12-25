@@ -41,7 +41,9 @@ class AppNavigator {
         });
       case Routes.searchAddressForRoutingScreen:
         return MaterialPageRoute(builder: (context) {
-          return const SearchAddress();
+          return SearchAddress(
+            paramsModel: arguments?['paramsModel'],
+          );
         });
       default:
         return MaterialPageRoute(builder: (context) {
