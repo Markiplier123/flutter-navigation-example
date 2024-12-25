@@ -66,7 +66,7 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
               Navigator.pushNamed(context, Routes.mapScreen,
                   arguments: {"navigator": true});
             },
-            child: const Text('OK'),
+            child: const Text('Yes'),
           ),
           TextButton(
             onPressed: () {
