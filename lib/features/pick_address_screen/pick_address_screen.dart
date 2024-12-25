@@ -28,7 +28,7 @@ class _PickAddressScreenState extends State<PickAddressScreen> {
   void initState() {
     appBar = AppBar(
       backgroundColor: Colors.white,
-      centerTitle: false,
+      centerTitle: true, // Center the title
       leading: InkWell(
           onTap: () {
             Navigator.pop(context);
@@ -39,16 +39,17 @@ class _PickAddressScreenState extends State<PickAddressScreen> {
         children: [
           Text(
             'Chọn địa chỉ',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black, fontSize: 20), // Larger text
           ),
           FittedBox(
             child: Text(
               'Xoay và thu phóng để chọn điểm đến',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: Colors.grey, fontSize: 14), // Smaller text
             ),
           ),
         ],
       ),
+      toolbarHeight: 80, // Increase app bar height
     );
     super.initState();
   }

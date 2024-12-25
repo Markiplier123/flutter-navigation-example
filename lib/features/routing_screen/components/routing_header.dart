@@ -121,7 +121,7 @@ class RoutingHeader extends StatelessWidget {
                                 state.routingParams?.originDescription);
                         Navigator.pushNamed(
                             context, Routes.searchAddressForRoutingScreen,
-                            arguments: data);
+                            arguments: {"paramsModel": data});
                       },
                       child: TextField(
                         enabled: false,
@@ -161,7 +161,7 @@ class RoutingHeader extends StatelessWidget {
                                 state.routingParams?.destinationDescription);
                         Navigator.pushNamed(
                             context, Routes.searchAddressForRoutingScreen,
-                            arguments: {"paramsModel":data});
+                            arguments: {"paramsModel": data});
                       },
                       child: TextField(
                         enabled: false,
