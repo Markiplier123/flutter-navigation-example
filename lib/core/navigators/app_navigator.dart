@@ -31,7 +31,9 @@ class AppNavigator {
         });
       case Routes.routingScreen:
         return MaterialPageRoute(builder: (context) {
-          return const RoutingScreen();
+          return RoutingScreen(
+            paramsModel: arguments?['paramsModel'],
+          );
         });
       case Routes.pickAddressScreen:
         return MaterialPageRoute(builder: (context) {

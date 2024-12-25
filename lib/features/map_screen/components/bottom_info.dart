@@ -68,9 +68,18 @@ class BottomSheetInfo extends StatelessWidget {
                     MapActionButton(
                         onPressed: () async {
                           EasyLoading.show();
-                          Navigator.pushNamed(context, Routes.routingScreen,
-                              arguments: RoutingParamsModel.fromVietmapModel(
-                                  state.response, false));
+
+                          Navigator.pushNamed(
+                            context,
+                            Routes.routingScreen,
+                            arguments: {
+                              "paramsModel":
+                                  RoutingParamsModel.fromVietmapModel(
+                                state.response,
+                                false,
+                              ),
+                            },
+                          );
                         },
                         child: const Row(
                           children: [
@@ -82,9 +91,17 @@ class BottomSheetInfo extends StatelessWidget {
                     const SizedBox(width: 10),
                     MapActionButtonOutline(
                         onPressed: () {
-                          Navigator.pushNamed(context, Routes.routingScreen,
-                              arguments: RoutingParamsModel.fromVietmapModel(
-                                  state.response, true));
+                          Navigator.pushNamed(
+                            context,
+                            Routes.routingScreen,
+                            arguments: {
+                              "paramsModel":
+                                  RoutingParamsModel.fromVietmapModel(
+                                state.response,
+                                true,
+                              ),
+                            },
+                          );
                         },
                         child: const Row(
                           children: [
@@ -149,9 +166,17 @@ class BottomSheetInfo extends StatelessWidget {
                     MapActionButton(
                         onPressed: () async {
                           EasyLoading.show();
-                          Navigator.pushNamed(context, Routes.routingScreen,
-                              arguments: RoutingParamsModel.fromVietmapModel(
-                                  state.response, false));
+                          Navigator.pushNamed(
+                            context,
+                            Routes.routingScreen,
+                            arguments: {
+                              "paramsModel":
+                                  RoutingParamsModel.fromVietmapModel(
+                                state.response,
+                                false,
+                              ),
+                            },
+                          );
                         },
                         child: const Row(
                           children: [
@@ -163,9 +188,15 @@ class BottomSheetInfo extends StatelessWidget {
                     const SizedBox(width: 10),
                     MapActionButtonOutline(
                         onPressed: () {
-                          Navigator.pushNamed(context, Routes.routingScreen,
-                              arguments: RoutingParamsModel.fromVietmapModel(
-                                  state.response, true));
+                          Navigator.pushNamed(
+                            context,
+                            Routes.routingScreen,
+                            arguments: {
+                              "paramsModel":
+                                  RoutingParamsModel.fromVietmapModel(
+                                      state.response, true)
+                            },
+                          );
                         },
                         child: const Row(
                           children: [

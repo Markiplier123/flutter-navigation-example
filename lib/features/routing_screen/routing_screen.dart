@@ -12,7 +12,6 @@ import 'package:vietmap_flutter_navigation/models/route_progress_event.dart';
 import 'package:vietmap_flutter_navigation/navigation_plugin.dart';
 import 'package:vietmap_flutter_navigation/views/navigation_view.dart';
 import 'package:vietmap_map/constants/colors.dart';
-import 'package:vietmap_map/domain/entities/vietmap_model.dart';
 import 'package:vietmap_map/extension/latlng_extension.dart';
 import 'package:vietmap_map/features/bloc/bloc.dart';
 import 'package:vietmap_map/features/routing_screen/components/routing_header.dart';
@@ -26,7 +25,8 @@ import 'components/vietmap_bottom_view.dart';
 import 'models/routing_params_model.dart';
 
 class RoutingScreen extends StatefulWidget {
-  const RoutingScreen({super.key});
+  final RoutingParamsModel? paramsModel;
+  const RoutingScreen({super.key, this.paramsModel});
 
   @override
   State<RoutingScreen> createState() => _RoutingScreenState();
@@ -72,8 +72,8 @@ class _RoutingScreenState extends State<RoutingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       Future.delayed(const Duration(milliseconds: 200))
           .then((value) => _panelController.hide());
-      if (ModalRoute.of(context)!.settings.arguments != null) {
-        var args = ModalRoute.of(context)!.settings.arguments as VietmapModel;
+      if (widget.paramsModel != null) {
+        var args = widget.paramsModel!;
         AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
             destinationDescription: args.getAddress() ?? 'Vị trí đã chọn',
             destinationPoint: LatLng(args.lat ?? 0, args.lng ?? 0)));
@@ -171,10 +171,8 @@ class _RoutingScreenState extends State<RoutingScreen> {
                       },
                       onMapRendered: () async {
                         EasyLoading.show();
-                        if (ModalRoute.of(context)!.settings.arguments !=
-                            null) {
-                          var args = ModalRoute.of(context)!.settings.arguments
-                              as RoutingParamsModel;
+                        if (widget.paramsModel != null) {
+                          var args = widget.paramsModel!;
                           var listWaypoint = <LatLng>[];
                           var res = await Geolocator.getCurrentPosition();
                           listWaypoint.add(LatLng(res.toLatLng().latitude,
