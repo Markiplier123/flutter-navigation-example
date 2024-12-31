@@ -25,7 +25,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     on<MapEventGetDetailAddress>(_onMapEventGetDetailAddress);
     on<MapEventGetEntryPointDetailAddress>(
         _onMapEventGetEntryPointDetailAddress);
-
     on<MapEventGetDirection>(_onMapEventGetDirection);
     on<MapEventGetAddressFromCoordinate>(_onMapEventGetAddressFromCoordinate);
     on<MapEventOnUserLongTapOnMap>(_onMapEventOnUserLongTapOnMap);
