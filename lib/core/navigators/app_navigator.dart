@@ -33,6 +33,7 @@ class AppNavigator {
         return MaterialPageRoute(builder: (context) {
           return RoutingScreen(
             paramsModel: arguments?['paramsModel'],
+            position: arguments?['position'],
           );
         });
       case Routes.pickAddressScreen:

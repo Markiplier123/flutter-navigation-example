@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:vietmap_map/core/navigators/app_navigator.dart';
 import 'package:vietmap_map/core/navigators/app_route.dart';
+import 'package:vietmap_map/data/models/vietmap_reverse_model.dart';
+import 'package:vietmap_map/domain/repository/vietmap_api_repositories.dart';
+import 'package:vietmap_map/domain/usecase/get_location_from_latlng_usecase.dart';
+import 'package:vietmap_map/domain/usecase/get_point_from_category_usecase.dart';
+import 'package:vietmap_map/features/routing_screen/models/routing_params_model.dart';
 
 class FuelBrakeScreen extends StatefulWidget {
   const FuelBrakeScreen({super.key});
@@ -52,6 +60,64 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
     );
   }
 
+  _onMapEventGasNearby() async {
+    if (!EasyLoading.isShow) {
+      EasyLoading.show();
+    }
+    var res = await Geolocator.checkPermission();
+
+    if (![LocationPermission.always, LocationPermission.whileInUse]
+        .contains(res)) {
+      final LocationPermission locationPermission =
+          await Geolocator.requestPermission();
+
+      if ([LocationPermission.always, LocationPermission.whileInUse]
+          .contains(locationPermission)) {
+        await _handleNavigatorToNearestGas();
+      }
+    } else {
+      await _handleNavigatorToNearestGas();
+    }
+  }
+
+  Future<void> _handleNavigatorToNearestGas() async {
+    final Position position = await Geolocator.getCurrentPosition();
+
+    var response =
+        await GetLocationFromCategoryUseCase(VietmapApiRepositories()).call(
+      LocationPoint(
+        lat: position.latitude,
+        long: position.longitude,
+        category: 10009,
+      ),
+    );
+    VietmapReverseModel? model;
+
+    response.fold((l) => null, (r) {
+      r.sort((a, b) => (a.distance ?? 0).compareTo((b.distance ?? 0)));
+
+      model = r.first;
+    });
+
+    if (EasyLoading.isShow) {
+      EasyLoading.dismiss();
+    }
+
+    if (model != null) {
+      Navigator.pushNamed(
+        AppNavigator.navigatorKey.currentContext!,
+        Routes.routingScreen,
+        arguments: {
+          "position": position,
+          "paramsModel": RoutingParamsModel.fromVietmapModel(
+            model!,
+            true,
+          ),
+        },
+      );
+    }
+  }
+
   void showFuelStationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -63,8 +129,7 @@ class _FuelBrakeScreenState extends State<FuelBrakeScreen> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              Navigator.pushNamed(context, Routes.mapScreen,
-                  arguments: {"navigator": true});
+              _onMapEventGasNearby();
             },
             child: const Text('Yes'),
           ),

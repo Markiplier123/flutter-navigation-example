@@ -33,4 +33,9 @@ class VietmapReverseModel extends VietmapModel {
     data['display'] = display;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'VietmapReverseModel(refId: $refId, distance: $distance, lat: $lat, lng: $lng, address: $address, name: $name, display: $display)';
+  }
 }

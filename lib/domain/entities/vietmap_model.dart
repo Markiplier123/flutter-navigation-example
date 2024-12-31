@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive_flutter/hive_flutter.dart';
 
 class VietmapModel {
@@ -26,5 +27,10 @@ class VietmapModel {
       return display!;
     }
     return name;
+  }
+
+  @override
+  String toString() {
+    return 'VietmapModel(lat: $lat, lng: $lng, address: $address, name: $name, display: $display)';
   }
 }

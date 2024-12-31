@@ -26,7 +26,8 @@ import 'models/routing_params_model.dart';
 
 class RoutingScreen extends StatefulWidget {
   final RoutingParamsModel? paramsModel;
-  const RoutingScreen({super.key, this.paramsModel});
+  final Position? position;
+  const RoutingScreen({super.key, this.paramsModel, required this.position});
 
   @override
   State<RoutingScreen> createState() => _RoutingScreenState();
@@ -74,16 +75,35 @@ class _RoutingScreenState extends State<RoutingScreen> {
           .then((value) => _panelController.hide());
       if (widget.paramsModel != null) {
         var args = widget.paramsModel!;
-        AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
+        AppBloc.routingBloc.add(
+          RoutingEventUpdateRouteParams(
             destinationDescription: args.getAddress() ?? 'Vị trí đã chọn',
-            destinationPoint: LatLng(args.lat ?? 0, args.lng ?? 0)));
+            destinationPoint: LatLng(
+              args.lat ?? 0,
+              args.lng ?? 0,
+            ),
+          ),
+        );
       }
 
-      var position = await Geolocator.getCurrentPosition();
+      Position? position;
+
+      if (widget.position != null) {
+        position = widget.position;
+      } else {
+        position = await Geolocator.getCurrentPosition();
+      }
+
       if (!mounted) return;
-      AppBloc.routingBloc.add(RoutingEventUpdateRouteParams(
+      AppBloc.routingBloc.add(
+        RoutingEventUpdateRouteParams(
           originDescription: 'Vị trí của bạn',
-          originPoint: LatLng(position.latitude, position.longitude)));
+          originPoint: LatLng(
+            position?.latitude ?? 0,
+            position?.longitude ?? 0,
+          ),
+        ),
+      );
     });
   }
 
