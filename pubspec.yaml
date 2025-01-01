@@ -51,21 +51,20 @@ flutter:
   uses-material-design: true
  
   assets:
-    - assets/images/vietmap.jpg
+    - assets/images/Diagnostic_and_Navigation_App.jpg
     - assets/images/
     - assets/svg/
     - assets/navigation_symbol/
     - shorebird.yaml
-    - assets/images/vm_demo.png
     - assets/tiles/
     - .env
 # flutter pub run build_runner build 
 
 
 flutter_icons:
-  android: false #"launcher_icon"
+  android: true #"launcher_icon"
   ios: true
-  image_path: "assets/images/vm_demo.png"
+  image_path: "assets/images/Diagnostic_and_Navigation_App.jpg"
   remove_alpha_ios: true
   min_sdk_android: 21 # android min sdk min:16, default 21
     

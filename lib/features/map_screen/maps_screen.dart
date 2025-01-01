@@ -216,6 +216,7 @@ class _MapScreenState extends State<MapScreen> {
             body: Stack(
               children: [
                 VietmapGL(
+                  logoViewMargins: const Point(-1000, -1000),
                   myLocationEnabled: true,
                   myLocationTrackingMode:
                       MyLocationTrackingMode.TrackingCompass,
